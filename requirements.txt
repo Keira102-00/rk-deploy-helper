@@ -1,0 +1,5 @@
+rknn-toolkit2
+onnx
+opencv-python
+ultralytics
+numpy 
