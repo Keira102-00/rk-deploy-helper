@@ -17,14 +17,24 @@ def convert_pt_to_onnx(pt_path: str, onnx_path: str = None, input_size=(640, 640
     if onnx_path is None:
         onnx_path = os.path.splitext(pt_path)[0] + ".onnx"
 
+    # ultralytics 的 name 参数只支持文件名，不支持路径
+    export_name = os.path.splitext(os.path.basename(onnx_path))[0]
+    export_dir = os.path.dirname(onnx_path) or os.getcwd()
+
     # 加载模型
     model = YOLO(pt_path)
 
     # 导出为 onnx
     model.export(format="onnx", imgsz=input_size, dynamic=False, simplify=True, optimize=True, half=False, device="cpu", 
                  opset=12, 
-                 output=onnx_path)
-    print(f"模型已导出为: {onnx_path}")
+                 name=export_name)
+    # 移动导出文件到目标路径（ultralytics 默认导出到当前目录）
+    src_onnx = os.path.join(os.getcwd(), export_name + ".onnx")
+    dst_onnx = os.path.join(export_dir, export_name + ".onnx")
+    if os.path.abspath(src_onnx) != os.path.abspath(dst_onnx):
+        import shutil
+        shutil.move(src_onnx, dst_onnx)
+    print(f"模型已导出为: {dst_onnx}")
 
 if __name__ == "__main__":
     import argparse
