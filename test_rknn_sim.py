@@ -25,6 +25,8 @@ ret = rknn.init_runtime(target=None)  # PC仿真
 if ret != 0:
     print("RKNN 运行环境初始化失败！")
     exit(1)
+# 生成NHWC格式输入
 dummy_input = np.random.randn(1, 3, 640, 640).astype(np.float32)
+dummy_input = np.transpose(dummy_input, (0, 2, 3, 1))  # NCHW -> NHWC
 outputs = rknn.inference(inputs=[dummy_input])
 print("RKNN仿真输出:", [o.shape if hasattr(o, 'shape') else type(o) for o in outputs]) 
