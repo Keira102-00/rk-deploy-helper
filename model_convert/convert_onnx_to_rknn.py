@@ -16,7 +16,15 @@ def convert_onnx_to_rknn(onnx_path: str, rknn_path: str = None, input_size=(640,
 
     rknn = RKNN()
     print(f"开始加载 ONNX: {onnx_path}")
-    ret = rknn.load_onnx(model=onnx_path, inputs=["input"], input_size_list=[list(input_size) + [3]])
+
+    # 必须先配置
+    rknn.config(
+        mean_values=[[0, 0, 0]],
+        std_values=[[255, 255, 255]],
+        target_platform='rk3588'
+    )
+
+    ret = rknn.load_onnx(model=onnx_path)
     if ret != 0:
         print("ONNX 加载失败！")
         return
