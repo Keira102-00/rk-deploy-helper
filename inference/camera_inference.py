@@ -1,6 +1,6 @@
 import cv2
 import numpy as np
-from utils import preprocess, postprocess, draw_boxes
+from inference.utils import preprocess, postprocess, draw_boxes
 
 class RKNNCameraInfer:
     def __init__(self, rknn_path, input_size=(640, 640)):
